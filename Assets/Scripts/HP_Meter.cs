@@ -5,8 +5,10 @@ public class HPDisplay : MonoBehaviour
 {
     public int startingHP = 300;
     public int targetHP = 300;
-    public float tickDuration = 0.05f;  // seconds per HP step
+    public float tickDuration = 0.16f;  // seconds per HP step
+    public bool isGuard;
 
+    private bool lastIsGuard;
     private int displayedHP;            // the HP value currently being shown/animating
     private float tickTimer;
     private bool initialized = false;
@@ -24,10 +26,11 @@ public class HPDisplay : MonoBehaviour
     {
         yield return null; // wait one frame for all RollingDigit Awake() calls to finish
 
-        // Tell each digit how fast to animate sub-frames
-        hundreds.SetTickDuration(tickDuration);
-        tens.SetTickDuration(tickDuration);
-        ones.SetTickDuration(tickDuration);
+        lastIsGuard = isGuard;
+       float effectiveTickDuration = isGuard ? tickDuration * 2f : tickDuration;
+       hundreds.SetTickDuration(effectiveTickDuration);
+       tens.SetTickDuration(effectiveTickDuration);
+       ones.SetTickDuration(effectiveTickDuration);
 
         // Snap display instantly to startingHP
         displayedHP = startingHP;
@@ -43,14 +46,30 @@ public class HPDisplay : MonoBehaviour
         tens.SnapToCurrent();
         ones.SnapToCurrent();
 
-        tickTimer = tickDuration;
+        tickTimer = effectiveTickDuration;
         initialized = true;
     }
+
+    public void ApplyDamage(float damage)
+{
+    int dmg = Mathf.RoundToInt(damage);
+    targetHP = Mathf.Max(0, targetHP - dmg);
+}
 
     void Update()
     {
         if (!initialized) return;
         if (displayedHP == targetHP) return;
+
+        
+        if (isGuard != lastIsGuard)
+{
+    lastIsGuard = isGuard;
+    float newDuration = isGuard ? tickDuration * 2f : tickDuration;
+    hundreds.SetTickDuration(newDuration);
+    tens.SetTickDuration(newDuration);
+    ones.SetTickDuration(newDuration);
+}
 
         tickTimer -= Time.deltaTime;
         if (tickTimer > 0f) return;
@@ -58,7 +77,7 @@ public class HPDisplay : MonoBehaviour
         // Only tick if no digit is still mid-animation from the last tick
         if (hundreds.IsRolling() || tens.IsRolling() || ones.IsRolling()) return;
 
-        tickTimer = tickDuration;
+        tickTimer = isGuard ? tickDuration * 2f : tickDuration;
 
         // Step displayedHP one tick toward targetHP
         displayedHP += displayedHP < targetHP ? 1 : -1;

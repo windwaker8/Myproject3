@@ -47,17 +47,30 @@ public class RollingDigit : MonoBehaviour
     }
 
     // Called by HPDisplay each tick when this digit's value changes
-    public void RollToDigit(int newDigit)
-    {
-        targetDigit = newDigit;
-        int targetSlot = newDigit >= 0 ? newDigit : blankDigitIndex;
-        targetFramePos = targetSlot * framesPerDigit;
+ public void RollToDigit(int newDigit)
+{
+    targetDigit = newDigit;
+    int targetSlot = newDigit >= 0 ? newDigit : blankDigitIndex;
+    int currentSlot = currentDigit >= 0 ? currentDigit : blankDigitIndex;
 
-        // Determine roll direction based on digit value change
-        int currentSlot = currentDigit >= 0 ? currentDigit : blankDigitIndex;
-        if (targetSlot != currentSlot)
-            isRolling = true;
+    // Blank transitions: snap instantly, no roll animation
+    if (newDigit < 0 || currentDigit < 0)
+    {
+        currentFramePos = targetSlot * framesPerDigit;
+        targetFramePos = currentFramePos;
+        currentDigit = newDigit;
+        isRolling = false;
+        ApplySprite();
+        return;
     }
+
+    int diff = targetSlot - currentSlot;
+    if (diff > 5) diff -= 10;
+    else if (diff < -5) diff += 10;
+
+    targetFramePos = currentFramePos + diff * framesPerDigit;
+    isRolling = diff != 0;
+}
 
     public bool IsRolling() => isRolling;
 
@@ -71,19 +84,30 @@ public class RollingDigit : MonoBehaviour
         bool reached = direction > 0 ? currentFramePos >= targetFramePos
                                      : currentFramePos <= targetFramePos;
         if (reached)
-        {
-            currentFramePos = targetFramePos;
-            currentDigit = targetDigit;
-            isRolling = false;
-        }
+{
+    int targetSlot = targetDigit >= 0 ? targetDigit : blankDigitIndex;
+    currentFramePos = targetSlot * framesPerDigit;  // snap to canonical frame, not drifted value
+    currentDigit = targetDigit;
+    isRolling = false;
+}
 
         ApplySprite();
     }
 
     private void ApplySprite()
+{
+    float digitRange = 10 * framesPerDigit; // the circular 0-9 range only
+    float pos = currentFramePos;
+
+    // Only wrap for actual digit positions, not the blank slot
+    if (targetDigit >= 0 && currentDigit >= 0)
     {
-        int index = Mathf.Clamp(Mathf.RoundToInt(currentFramePos), 0, totalFrames - 1);
-        if (frames != null && frames.Length > index && frames[index] != null)
-            spriteRenderer.sprite = frames[index];
+        if (pos < 0) pos += digitRange;
+        else if (pos >= digitRange) pos -= digitRange;
     }
+
+    int index = Mathf.Clamp(Mathf.RoundToInt(pos), 0, totalFrames - 1);
+    if (frames != null && frames.Length > index && frames[index] != null)
+        spriteRenderer.sprite = frames[index];
+}
 }

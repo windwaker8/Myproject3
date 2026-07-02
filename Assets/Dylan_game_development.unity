@@ -442,6 +442,7 @@ GameObject:
   - component: {fileID: 1177304784}
   - component: {fileID: 1177304783}
   - component: {fileID: 1177304786}
+  - component: {fileID: 1177304787}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -551,6 +552,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1177304787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40551c5c4a3df984696d8e2ff1291276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  moveSpeed: 5
 --- !u!1 &1423685152
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,6 +817,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1613770206}
   - component: {fileID: 1613770205}
+  - component: {fileID: 1613770207}
   m_Layer: 0
   m_Name: HP_meter
   m_TagString: Untagged
@@ -822,9 +837,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3381bff871ab92e4083bd16933611998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
-  startingHP: 30
-  targetHP: 9
-  tickDuration: 0.05
+  startingHP: 50
+  targetHP: 30
+  tickDuration: 0.16
+  isGuard: 0
   hundreds: {fileID: 1423685155}
   tens: {fileID: 1837597534}
   ones: {fileID: 1618079571}
@@ -847,6 +863,21 @@ Transform:
   - {fileID: 1423685153}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1613770207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613770204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cbf7191c52abc74081230aa7b5f9e6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::damageCalc
+  Atk: 10
+  Def: 1
+  HP_meter: {fileID: 1613770204}
 --- !u!1 &1618079568
 GameObject:
   m_ObjectHideFlags: 0
@@ -1331,6 +1362,37 @@ MonoBehaviour:
   blankDigitIndex: 10
   currentDigit: 0
   targetDigit: 0
+--- !u!1 &1947800710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1947800711}
+  m_Layer: 0
+  m_Name: damage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1947800711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947800710}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.4732, y: 1.38099, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1966025341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,6 +1404,7 @@ GameObject:
   - component: {fileID: 1966025345}
   - component: {fileID: 1966025344}
   - component: {fileID: 1966025342}
+  - component: {fileID: 1966025346}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1450,6 +1513,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1966025346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966025341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91fa8baf50f7af46a22948a34cbb751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  moveSpeed: 3
+  detectionRadius: 5
+  wanderDurationRange: {x: 1, y: 3}
+  pauseDurationRange: {x: 0.5, y: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1458,3 +1537,4 @@ SceneRoots:
   - {fileID: 1177304784}
   - {fileID: 1966025345}
   - {fileID: 1613770206}
+  - {fileID: 1947800711}
