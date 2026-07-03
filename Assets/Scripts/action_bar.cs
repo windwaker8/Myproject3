@@ -3,55 +3,73 @@ using UnityEngine;
 public class DamageSweepBar : MonoBehaviour
 {
     [Header("References")]
-    public RectTransform barArea;   // the overall track width -- can be "action meter" itself
-    public RectTransform slider;    // the moving line
-    public RectTransform greenBar;  // green zone bounds
-    public RectTransform redBar;    // red zone bounds (optional, for explicit checking)
+   
+    public Transform slider;
+    public Transform greenBar;
+    public Transform redBar;
 
     [Header("Settings")]
-    public float sweepSpeed = 200f; // pixels per second
+    public float sweepSpeed = 1f; // units per second (world space, likely much smaller than 200)
 
-    private float linePos;
+    private float leftBound;
+    private float rightBound;
     private int direction = 1;
+
+    void Start()
+    {
+       
+        SpriteRenderer trackSprite = redBar.GetComponent<SpriteRenderer>();
+        float halfWidth = trackSprite.bounds.extents.x;
+        leftBound = redBar.position.x - halfWidth;
+        rightBound = redBar.position.x + halfWidth;
+    }
 
     void Update()
     {
-        float barWidth = barArea.rect.width;
+        float newX = slider.position.x + direction * sweepSpeed * Time.deltaTime;
 
-        linePos += direction * sweepSpeed * Time.deltaTime;
-
-        // Bounce back and forth across the bar
-        if (linePos >= barWidth)
+        if (newX >= rightBound)
         {
-            linePos = barWidth;
+            newX = rightBound;
             direction = -1;
         }
-        else if (linePos <= 0f)
+        else if (newX <= leftBound)
         {
-            linePos = 0f;
+            newX = leftBound;
             direction = 1;
         }
 
-        // Move the slider to match
-        Vector2 pos = slider.anchoredPosition;
-        pos.x = linePos;
-        slider.anchoredPosition = pos;
+        Vector3 pos = slider.position;
+        pos.x = newX;
+        slider.position = pos;
     }
 
-    public bool IsInGreenZone()
+    public bool IsInGreenZone() => IsSliderWithin(greenBar);
+    public bool IsInRedZone() => IsSliderWithin(redBar);
+
+    private bool IsSliderWithin(Transform zone)
     {
-        return IsSliderWithin(greenBar);
+        SpriteRenderer zoneSprite = zone.GetComponent<SpriteRenderer>();
+        float halfWidth = zoneSprite.bounds.extents.x;
+        float zoneMin = zone.position.x - halfWidth;
+        float zoneMax = zone.position.x + halfWidth;
+        return slider.position.x >= zoneMin && slider.position.x <= zoneMax;
     }
 
-    public bool IsInRedZone()
-    {
-        return IsSliderWithin(redBar);
-    }
+    public float GetDamageMultiplier()
+{
+    // Flat 100% anywhere inside the green zone
+    if (IsInGreenZone())
+        return 1f;
 
-    private bool IsSliderWithin(RectTransform zone)
-    {
-        float zoneMin = zone.anchoredPosition.x - (zone.rect.width / 2f);
-        float zoneMax = zone.anchoredPosition.x + (zone.rect.width / 2f);
-        return linePos >= zoneMin && linePos <= zoneMax;
-    }
+    // Outside green: falloff based on distance from green zone's edge
+    float greenHalfWidth = greenBar.GetComponent<SpriteRenderer>().bounds.extents.x;
+    float greenEdgeDistance = Mathf.Abs(slider.position.x - greenBar.position.x) - greenHalfWidth;
+
+    float trackHalfWidth = (rightBound - leftBound) / 2f;
+    float maxFalloffDistance = trackHalfWidth - greenHalfWidth; // distance from green's edge to track's edge
+
+    float normalizedDistance = Mathf.Clamp01(greenEdgeDistance / maxFalloffDistance);
+    return Mathf.Lerp(1f, 0.2f, normalizedDistance);
+}
 }

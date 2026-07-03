@@ -18,29 +18,27 @@ private void GetKeyInput(char obj)
 {
     if (obj == ' ')
     {
-        bool inGreen = sweepBar.IsInGreenZone();
-        float damage = calcDamage(Atk, Def, inGreen);
+       float multiplier = sweepBar.GetDamageMultiplier();
+        float rawDamage = calcDamage(Atk, Def, multiplier);
+        float damage = Mathf.Ceil(rawDamage); 
         HP_meter.ApplyDamage(damage);
+        Debug.Log("Dealt"+" "+ damage +" "+ "damage");
     }
 }
 
-float calcDamage(float atk, float def, bool isGreenZone)
-{
-    float damage = atk - def;
-    if (!isGreenZone)
-        damage *= Random.Range(0.5f, 0.75f);
-    return Mathf.Max(damage, 0f);
-}
+
+
+
 void OnDisable()
 {
     Keyboard.current.onTextInput -= GetKeyInput;
 }
     
  
-    float calcDamage( float atk, float def){
+    float calcDamage( float atk, float def, float range){
        
 
-        float damage = atk - def;
+        float damage = (atk - def)* range;
         return damage;
        }
    
