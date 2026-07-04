@@ -5,16 +5,16 @@ public class damageCalc : MonoBehaviour
 
 {   public float Atk = 10;
     public float Def = 1;
-    public DamageSweepBar sweepBar;
-    public HPDisplay HP_meter;
+    public DamageSweepBar sweepBar; //connects to action_bar
+    public HPDisplay HP_meter; //connects to HP_Meter
     
     void OnEnable()
 {
-    Keyboard.current.onTextInput += GetKeyInput;
+    Keyboard.current.onTextInput += GetKeyInput; 
 }
 
 
-private void GetKeyInput(char obj)
+private void GetKeyInput(char obj) //checks for space, if pressed scroll the hp meter by a random amount.
 {
     if (obj == ' ')
     {
@@ -22,7 +22,7 @@ private void GetKeyInput(char obj)
         float rawDamage = calcDamage(Atk, Def, multiplier);
         float damage = Mathf.Ceil(rawDamage); 
         HP_meter.ApplyDamage(damage);
-        Debug.Log("Dealt"+" "+ damage +" "+ "damage");
+       
     }
 }
 
@@ -35,7 +35,7 @@ void OnDisable()
 }
     
  
-    float calcDamage( float atk, float def, float range){
+    float calcDamage( float atk, float def, float range){//uses the value returned when space was pressed for damage.
        
 
         float damage = (atk - def)* range;
