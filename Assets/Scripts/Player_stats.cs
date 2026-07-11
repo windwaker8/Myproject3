@@ -5,6 +5,7 @@ public enum DamageType { Physical, Elemental, Technical }
 public class PlayerStats : MonoBehaviour
 {
     public int Max_HP = 30;
+    public int currentHP;
     public int Max_PP = 10;
     public int Atk = 2;
     public int Def = 2;
@@ -16,9 +17,17 @@ public class PlayerStats : MonoBehaviour
 
     
     
-
+void Awake(){
+    player1_hp.startingHP = Max_HP;
+}
     public int DamageFormula(int playerAtk, int enemyDef)
-    {    int rawDamage;
-        return rawDamage = 2 * (playerAtk - enemyDef);
+    {    
+        int rawDamage = 2 * (playerAtk - enemyDef);
+        return rawDamage;
     }
+    public void ApplyDamage(int dmg)
+{
+    currentHP = Mathf.Clamp(currentHP - dmg, 0, Max_HP);
+    player1_hp.targetHP = currentHP;
+}
 }
