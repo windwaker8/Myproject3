@@ -14,16 +14,29 @@ public class DamageSweepBar : MonoBehaviour
     private float leftBound;   // world X position of the track's left edge
     private float rightBound;  // world X position of the track's right edge
     private int direction = 1; // +1 = moving right, -1 = moving left
+    private SpriteRenderer slideSprite; 
 
     void Start()
     {
         // Derive the sweep bounds from redBar's own width, since redBar
         // visually spans the entire track (greenBar sits inside it)
         SpriteRenderer trackSprite = redBar.GetComponent<SpriteRenderer>(); // gets redBar's SpriteRenderer
+        slideSprite = slider.GetComponent<SpriteRenderer>();
+        
+
         float halfWidth = trackSprite.bounds.extents.x; // half of redBar's width, in world units
         leftBound = redBar.position.x - halfWidth;
         rightBound = redBar.position.x + halfWidth;
     }
+
+public void hideSlider()
+{
+    slideSprite.enabled = false;
+}
+public void showSlider()
+{
+    slideSprite.enabled = true;
+}
 
     void Update()
     {

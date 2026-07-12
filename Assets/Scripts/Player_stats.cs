@@ -19,12 +19,9 @@ public class PlayerStats : MonoBehaviour
     
 void Awake(){
     player1_hp.startingHP = Max_HP;
+    player1_hp.targetHP = Max_HP;
 }
-    public int DamageFormula(int playerAtk, int enemyDef)
-    {    
-        int rawDamage = 2 * (playerAtk - enemyDef);
-        return rawDamage;
-    }
+   
     public void ApplyDamage(int dmg)
 {
     currentHP = Mathf.Clamp(currentHP - dmg, 0, Max_HP);
