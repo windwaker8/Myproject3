@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
-{
+{  
    public int Max_HP = 30;
     public int currentHP;
     public int Max_PP = 10;
@@ -9,7 +9,7 @@ public class EnemyStats : MonoBehaviour
     public int Def = 3;
     public int Skill = 5;
     public int IQ = 2;
-    public int Speed = 2;
+    public int Speed = 255;
 
     // Update is called once per frame
     void Awake(){

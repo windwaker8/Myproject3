@@ -22,9 +22,5 @@ void Awake(){
     player1_hp.targetHP = Max_HP;
 }
    
-    public void ApplyDamage(int dmg)
-{
-    currentHP = Mathf.Clamp(currentHP - dmg, 0, Max_HP);
-    player1_hp.targetHP = currentHP;
-}
+  
 }
