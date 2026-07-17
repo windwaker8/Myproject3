@@ -11,15 +11,15 @@ public class damageCalc : MonoBehaviour
     void OnEnable()
     {
         Keyboard.current.onTextInput += GetKeyInput;
+        
     }
 
     private void GetKeyInput(char obj)
-    {
+    {   Debug.Log($"Key {obj} received.");
         if (obj == ' ' && battleManager.state == BattleState.PlayerTurn)
-        {
+        {   Debug.Log("Pow!");
             float multiplier = sweepBar.GetDamageMultiplier();
-            float multDamage = playerAttack(DamageType.Physical, multiplier);
-            float damage = Mathf.Ceil(multDamage);
+            float damage= playerAttack(DamageType.Physical, multiplier);
             Enemy.ApplyDamage((int)damage);
             sweepBar.hideSlider();
 
@@ -30,32 +30,36 @@ public class damageCalc : MonoBehaviour
     void OnDisable()
     {
         Keyboard.current.onTextInput -= GetKeyInput;
+        
     }
 
     private float DamageCheck(float atk, float def, float range)
-    {
+    {   float raw;
         float damage;
         float calcedDamage = (atk - def) * range;
 
         if (calcedDamage >= 1)
-            damage = calcedDamage * 2;
+           { raw = calcedDamage * 2;
+            damage = Mathf.Ceil(raw);
+           }
         else
+        {
             damage = 1;
-
+        }
         return damage;
     }
 
     public float playerAttack(DamageType type, float multiplier)
-    {
-        float adaptAtk = type == DamageType.Physical ? player.Atk : player.Skill;
-        float adaptDef = type == DamageType.Physical ? Enemy.Def : Enemy.IQ;
-        return DamageCheck(adaptAtk, adaptDef, multiplier);
-    }
+{
+     float adaptAtk = type == DamageType.Physical ? player.Atk : player.Skill;  //Checks if physical, uses player.atk, else uses skill
+     float adaptDef = type == DamageType.Physical ? Enemy.Def : Enemy.IQ; // Checks if physical, uses enemy.def, else use iq.
+     return DamageCheck(adaptAtk, adaptDef, multiplier);
+}
 
     public float enemyAttack(DamageType type)
     {
-        float adaptAtk = type == DamageType.Physical ? Enemy.Atk : Enemy.Skill;
-        float adaptDef = type == DamageType.Physical ? player.Def : player.IQ;
+        float adaptAtk = type == DamageType.Physical ? Enemy.Atk : Enemy.Skill; //Same logic, just reversed to use enemy atk/skill
+        float adaptDef = type == DamageType.Physical ? player.Def : player.IQ;  
         float multiplier = Random.Range(0.85f, 1.0f);
         return DamageCheck(adaptAtk, adaptDef, multiplier);
     }

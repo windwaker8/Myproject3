@@ -797,6 +797,7 @@ GameObject:
   - component: {fileID: 1177304784}
   - component: {fileID: 1177304783}
   - component: {fileID: 1177304786}
+  - component: {fileID: 1177304787}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -905,6 +906,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1177304787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177304782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209ec4ab8d47eb646918764b4ba3c7ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  Max_HP: 30
+  currentHP: 0
+  Max_PP: 10
+  Atk: 2
+  Def: 2
+  Skill: 2
+  IQ: 2
+  Speed: 2
+  player1_hp: {fileID: 1613770205}
 --- !u!1 &1423685152
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,7 +1475,7 @@ MonoBehaviour:
   startingHP: 100
   targetHP: 100
   tickDuration: 0.16
-  isGuard: 1
+  isGuard: 0
   hundreds: {fileID: 1423685155}
   tens: {fileID: 1837597534}
   ones: {fileID: 1618079571}
@@ -2045,6 +2067,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1947800711}
   - component: {fileID: 1947800712}
+  - component: {fileID: 1947800713}
   m_Layer: 0
   m_Name: damage
   m_TagString: Untagged
@@ -2079,10 +2102,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cbf7191c52abc74081230aa7b5f9e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::damageCalc
-  player: {fileID: 0}
+  player: {fileID: 1177304787}
   sweepBar: {fileID: 95657860}
-  Enemy: {fileID: 0}
-  battleManager: {fileID: 0}
+  Enemy: {fileID: 1966025346}
+  battleManager: {fileID: 1947800713}
+--- !u!114 &1947800713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947800710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c4b67d5e1a60c4aa2eba9da81a53c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleManager
+  state: 0
+  player: {fileID: 1177304787}
+  enemy: {fileID: 1966025346}
+  calc: {fileID: 1947800712}
 --- !u!1 &1966025341
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,6 +2133,7 @@ GameObject:
   - component: {fileID: 1966025345}
   - component: {fileID: 1966025344}
   - component: {fileID: 1966025342}
+  - component: {fileID: 1966025346}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -2202,6 +2242,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1966025346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966025341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ba48f909df21646aeffa0e8a1fc9f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
+  Max_HP: 30
+  currentHP: 0
+  Max_PP: 10
+  Atk: 7
+  Def: 3
+  Skill: 5
+  IQ: 2
+  Speed: 255
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

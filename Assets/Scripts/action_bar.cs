@@ -15,7 +15,7 @@ public class DamageSweepBar : MonoBehaviour
     private float rightBound;  // world X position of the track's right edge
     private int direction = 1; // +1 = moving right, -1 = moving left
     private SpriteRenderer slideSprite; 
-
+    
     void Start()
     {
         // Derive the sweep bounds from redBar's own width, since redBar
@@ -38,6 +38,16 @@ public void showSlider()
     slideSprite.enabled = true;
 }
 
+
+public void hideBar()
+{
+ gameObject.SetActive(false);
+
+}
+public void showBar()
+{
+    gameObject.SetActive(true);
+}
     void Update()
     {
         // Move the slider by speed * direction each frame

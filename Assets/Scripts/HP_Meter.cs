@@ -56,7 +56,15 @@ public class HPDisplay : MonoBehaviour
 {
     int dmg = isGuard? Mathf.RoundToInt(damage)/2 : Mathf.RoundToInt(damage); //halves damage if isGuard is true.
     targetHP = Mathf.Max(0, targetHP - dmg);
-     Debug.Log("Dealt"+" "+ dmg +" "+ "damage");
+
+    if(isGuard)
+     {
+        Debug.Log("You are Guarding. Dealt"+" "+ dmg +" "+ "damage");
+     }
+     else
+     {
+       Debug.Log("Dealt"+" "+ dmg +" "+ "damage");
+     }
 }
 
     void Update()

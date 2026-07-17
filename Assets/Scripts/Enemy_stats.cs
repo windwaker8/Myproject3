@@ -15,9 +15,14 @@ public class EnemyStats : MonoBehaviour
     void Awake(){
         currentHP = Max_HP;
     }
-    public void ApplyDamage(int dmg)
+    //public void ApplyDamage(int dmg)
+//{
+  //  currentHP = Mathf.Clamp(currentHP - dmg, 0, Max_HP);
+   
+//}
+public void ApplyDamage(int dmg)
 {
     currentHP = Mathf.Clamp(currentHP - dmg, 0, Max_HP);
-   
+    Debug.Log($"🔴 ENEMY.APPLYDAMAGE CALLED — took {dmg}, currentHP now {currentHP}");
 }
 }

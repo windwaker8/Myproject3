@@ -4,12 +4,13 @@ using System.Collections;
 public enum BattleState { PlayerTurn, EnemyTurn, Win, Lose }
 
 public class BattleManager : MonoBehaviour
-{   public HPDisplay HP;
+{   
     public BattleState state;
     public PlayerStats player;
     public EnemyStats enemy;
     public damageCalc calc;
     public bool fiftyPercent => Random.value < 0.5f;
+    public DamageSweepbar sweep;
 
     void Start()
     {
@@ -25,6 +26,10 @@ public class BattleManager : MonoBehaviour
         {
             state = fiftyPercent ? BattleState.PlayerTurn : BattleState.EnemyTurn;
         }
+        if (state == BattleState.EnemyTurn)
+        {
+       StartCoroutine(EnemynoTurn());
+        }
     }
 
     public void playerAttacked()
@@ -38,22 +43,25 @@ public class BattleManager : MonoBehaviour
 
         state = BattleState.EnemyTurn;
         StartCoroutine(EnemynoTurn());
+        
     }
 
     IEnumerator EnemynoTurn()
-    {
+    {   float raw;
         float dmg;
         string damageType;
 
         if (fiftyPercent)
         {
-            dmg = calc.enemyAttack(DamageType.Physical);
+            raw = calc.enemyAttack(DamageType.Physical);
+            dmg = Mathf.Ceil(raw);
             damageType = "Physical";
         }
         else
         {
-            dmg = calc.enemyAttack(DamageType.Technical);
-            damageType = "Technical";
+            raw = calc.enemyAttack(DamageType.Elemental);
+            dmg = Mathf.Ceil(raw);
+            damageType = "Elemental";
         }
 
         player.player1_hp.ApplyDamage(dmg);
@@ -67,5 +75,6 @@ public class BattleManager : MonoBehaviour
         }
 
         state = BattleState.PlayerTurn;
+        sweep.showSlider();
     }
 }
