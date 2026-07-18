@@ -10,9 +10,40 @@ public class BattleManager : MonoBehaviour
     public EnemyStats enemy;
     public damageCalc calc;
     public bool fiftyPercent => Random.value < 0.5f;
-    public DamageSweepbar sweep;
+    public DamageSweepBar sweep;
+
+    private bool Pending;
 
     void Start()
+    {
+        Speedcheck();
+        Pending = true;
+        if(state == BattleState.EnemyTurn)
+        StartCoroutine(EnemynoTurn());
+    }
+
+    public void playerAttacked()
+    {
+        if (enemy.currentHP <= 0)
+        {
+            state = BattleState.Win;
+            Debug.Log("Bro got mogged.");
+            return; 
+        }
+       Speedcheck();
+       if(Pending)
+       {
+        Pending = false;
+        state = BattleState.EnemyTurn;
+       }
+       else
+        {   Pending = true;
+            Speedcheck();
+            if(state == BattleState.EnemyTurn)
+            StartCoroutine(EnemynoTurn());
+        }
+    }
+    private void Speedcheck()
     {
         if (player.Speed > enemy.Speed)
         {
@@ -26,30 +57,16 @@ public class BattleManager : MonoBehaviour
         {
             state = fiftyPercent ? BattleState.PlayerTurn : BattleState.EnemyTurn;
         }
-        if (state == BattleState.EnemyTurn)
-        {
-       StartCoroutine(EnemynoTurn());
-        }
     }
-
-    public void playerAttacked()
-    {
-        if (enemy.currentHP <= 0)
-        {
-            state = BattleState.Win;
-            Debug.Log("Bro got mogged.");
-            return; 
-        }
-
-        state = BattleState.EnemyTurn;
-        StartCoroutine(EnemynoTurn());
-        
-    }
-
     IEnumerator EnemynoTurn()
     {   float raw;
         float dmg;
         string damageType;
+        yield return new WaitForSeconds(0.5f);
+        sweep.hideBar();
+        yield return new WaitForSeconds(0.25f);
+
+        
 
         if (fiftyPercent)
         {
@@ -66,6 +83,9 @@ public class BattleManager : MonoBehaviour
 
         player.player1_hp.ApplyDamage(dmg);
         Debug.Log($"The enemy used a {damageType} attack! You took {dmg} damage!");
+       
+        sweep.showBar();
+        sweep.ResetSlider();
 
         if (player.player1_hp.targetHP <= 0)
         {
@@ -73,8 +93,25 @@ public class BattleManager : MonoBehaviour
             Debug.Log("Generational fumble by you.");
             yield break;
         }
-
+         if(Pending)
+       {
+        Pending = false;
         state = BattleState.PlayerTurn;
-        sweep.showSlider();
+       }
+       else
+        {   Pending = true;
+            Speedcheck();
+            if(state == BattleState.EnemyTurn)
+            StartCoroutine(EnemynoTurn());
+
+            else
+            {
+                sweep.showBar();
+                sweep.ResetSlider();
+            }
+            
+        }
+
+        
     }
 }

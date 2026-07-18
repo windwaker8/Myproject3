@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class DamageSweepBar : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class DamageSweepBar : MonoBehaviour
     private float rightBound;  // world X position of the track's right edge
     private int direction = 1; // +1 = moving right, -1 = moving left
     private SpriteRenderer slideSprite; 
+    private bool fiftyPercent => Random.value < 0.5f;
+    private bool isPaused = false;
+    
     
     void Start()
     {
@@ -40,16 +44,58 @@ public void showSlider()
 
 
 public void hideBar()
-{
+{ 
+    Debug.Log("hideBar() called");
  gameObject.SetActive(false);
 
 }
 public void showBar()
-{
+{ 
+    Debug.Log("showBar() called");
     gameObject.SetActive(true);
+
+}
+public void PauseSlider()
+{
+    isPaused = true;
+}
+
+public void ResumeSlider()
+{
+    isPaused = false;
+}
+
+public IEnumerator PauseThenHide(float delay)
+{
+    PauseSlider();
+    yield return new WaitForSeconds(delay);
+    hideBar();
+}
+
+public void ResetSlider()
+{
+    Vector3 pos = slider.position;
+    if(fiftyPercent)
+    {
+     pos.x = leftBound;
+     slider.position = pos;
+     direction = 1;
+
+    }
+    else
+    {
+    pos.x = rightBound;
+    slider.position = pos;
+    direction = -1;
+    }
+    slideSprite.enabled = true; 
+    ResumeSlider();
 }
     void Update()
+    {   if(isPaused)
     {
+        return;
+    }
         // Move the slider by speed * direction each frame
         float newX = slider.position.x + direction * sweepSpeed * Time.deltaTime;
 
@@ -65,7 +111,7 @@ public void showBar()
             newX = leftBound;
             direction = 1;
         }
-
+        
         // Apply the new X position to the slider, keeping Y/Z unchanged
         Vector3 pos = slider.position;
         pos.x = newX;

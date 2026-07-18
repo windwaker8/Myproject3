@@ -921,7 +921,7 @@ MonoBehaviour:
   Max_HP: 30
   currentHP: 0
   Max_PP: 10
-  Atk: 2
+  Atk: 9
   Def: 2
   Skill: 2
   IQ: 2
@@ -2122,6 +2122,7 @@ MonoBehaviour:
   player: {fileID: 1177304787}
   enemy: {fileID: 1966025346}
   calc: {fileID: 1947800712}
+  sweep: {fileID: 95657860}
 --- !u!1 &1966025341
 GameObject:
   m_ObjectHideFlags: 0
