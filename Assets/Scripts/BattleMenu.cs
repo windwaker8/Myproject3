@@ -9,6 +9,7 @@ public class BattleMenu : MonoBehaviour
 
     public Attack basicSlash = new Attack {
         moveName = "Slash", type = DamageType.Physical, power = 5,
+        isBasicAttack = true,
         atkWeight = 1f, skillWeight = 0f, iqWeight = 0f,
         defendingStat = StatType.Def
     };

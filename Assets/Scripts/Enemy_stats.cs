@@ -1,43 +1,58 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStats : MonoBehaviour, ICombatant
-{  
+{
+    [Header("Enemy Data")]
+    public EnemyData enemyData;
 
-
-    public int Max_HP = 30;
+    [Header("Runtime State")]
     public int currentHP;
-    public int Max_PP = 10;
-    public int Atk = 7;
-    public int Def = 3;
-    public int Skill = 5;
-    public int IQ = 2;
-    public int Speed = 255;
+    public List<Attack> knownAttacks = new List<Attack>();
 
-
-
-
-    // Update is called once per frame
-    void Awake(){
-        currentHP = Max_HP;
-    }
- 
-public int GetStat(StatType type)
-{
-    switch (type)
+    void Awake()
     {
-        case StatType.Atk: return Atk;
-        case StatType.Def: return Def;
-        case StatType.Skill: return Skill;
-        case StatType.IQ: return IQ;
-        case StatType.Speed: return Speed;
-        default: return 0;
+        if (enemyData != null)
+        {
+            currentHP = enemyData.maxHP;
+            knownAttacks = new List<Attack>(enemyData.attacks);
+        }
+        else
+        {
+            currentHP = 30;
+            knownAttacks = new List<Attack>();
+        }
+    }
+
+    public int GetStat(StatType type)
+    {
+        if (enemyData == null)
+            return 0;
+
+        switch (type)
+        {
+            case StatType.Atk: return enemyData.atk;
+            case StatType.Def: return enemyData.def;
+            case StatType.Skill: return enemyData.skill;
+            case StatType.IQ: return enemyData.iq;
+            case StatType.Speed: return enemyData.speed;
+            default: return 0;
+        }
+    }
+
+    public string GetName()
+    {
+        return enemyData != null ? enemyData.name : gameObject.name;
+    }
+
+    public void ApplyDamage(int dmg)
+    {
+        if (enemyData != null)
+            currentHP = Mathf.Clamp(currentHP - dmg, 0, enemyData.maxHP);
+        else
+            currentHP = Mathf.Clamp(currentHP - dmg, 0, 30);
+
+        Debug.Log($"🔴 ENEMY.APPLYDAMAGE CALLED — took {dmg}, currentHP now {currentHP}");
     }
 }
 
-
-public void ApplyDamage(int dmg)
-{
-    currentHP = Mathf.Clamp(currentHP - dmg, 0, Max_HP);
-    Debug.Log($"🔴 ENEMY.APPLYDAMAGE CALLED — took {dmg}, currentHP now {currentHP}");
-}
-}

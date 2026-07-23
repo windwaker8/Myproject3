@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum BattleState { PlayerTurn, EnemyTurn, Win, Lose }
 
@@ -17,6 +18,7 @@ public class BattleManager : MonoBehaviour
 
     public Attack enemyPhysical = new Attack {
         moveName = "Bash", type = DamageType.Physical, power = 1,
+        isBasicAttack = true,
         atkWeight = 1f, skillWeight = 0f, iqWeight = 0f,
         defendingStat = StatType.Def
     };
@@ -47,10 +49,10 @@ public void TurnOrder()
     foreach(var goon in enemygrp)
     everyone.Add(goon);
 }
-public void sort(int list arr)
+public void sort(int[] arr)
 {
     int l = arr.Length;
-    for(i =1; i< l; i++ )
+    for(int i = 1; i < l; i++)
     {
         int key = arr[i];
         int j = i-1;

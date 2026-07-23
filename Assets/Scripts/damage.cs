@@ -33,15 +33,24 @@ public class damageCalc : MonoBehaviour
 
     private float DamageCheck(ICombatant attacker, ICombatant defender, Attack attack, float range)
     {
-        float totalAttack = (attacker.GetStat(StatType.Atk) * attack.atkWeight)
-                           + (attacker.GetStat(StatType.Skill) * attack.skillWeight)
-                           + (attacker.GetStat(StatType.IQ) * attack.iqWeight);
-
         float defStat = defender.GetStat(attack.defendingStat);
 
-        float calcedDamage = (totalAttack - defStat + attack.power) * range;
+        float calcedDamage;
 
-        return calcedDamage >= 1 ? Mathf.Ceil(calcedDamage * 2) : 1;
+        if (attack.isBasicAttack)
+        {
+            calcedDamage = ((attacker.GetStat(StatType.Atk) - defStat) * 2f + attack.power) * range;
+        }
+        else
+        {
+            float totalAttack = (attacker.GetStat(StatType.Atk) * attack.atkWeight)
+                               + (attacker.GetStat(StatType.Skill) * attack.skillWeight)
+                               + (attacker.GetStat(StatType.IQ) * attack.iqWeight);
+
+            calcedDamage = ((totalAttack - (3*defStat) + attack.power)) * range;
+        }
+
+        return calcedDamage >= 1 ? Mathf.Ceil(calcedDamage * 2f) : 1f;
     }
 
     public float playerAttack(Attack attack, float multiplier)
